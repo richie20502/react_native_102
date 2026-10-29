@@ -1,45 +1,45 @@
-import {
-    StyleSheet,
-    View
-} from "react-native";
+/**
+ * Pantalla de Login
+ * Punto de entrada principal - redirige según estado de autenticación
+ */
 
+import { StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import LoginForm from "../components/LoginForm";
 import { useLogin } from "../hooks/useLogin";
 import { LoginRequest } from "../interfaces/auth.interface";
+import { getAccessToken } from "../utils/storage";
 
 export default function LoginScreen() {
     const router = useRouter();
-    const {
-        login,
-        loading,
-        error
-    } = useLogin();
+    const { login, loading, error } = useLogin();
 
-    const handleLogin = async (
-        data: LoginRequest
-    ) => {
+    // Verificar si ya hay sesión activa
+    useEffect(() => {
+        checkExistingSession();
+    }, []);
 
-        const success = await login(
-            data
-        );
+    const checkExistingSession = async () => {
+        const token = await getAccessToken();
+        if (token) {
+            // Si hay token, ir a tabs
+            router.replace("/home" as any);
+        }
+    };
 
+    const handleLogin = async (data: LoginRequest) => {
+        const success = await login(data);
         if (success) {
-            router.replace("/home");
+            router.replace("/home" as any);
         }
     };
 
     return (
         <View style={styles.container}>
             <LoginForm
-                 onLogin={(
-                    email,
-                    password
-                ) =>
-                    handleLogin({
-                        email,
-                        password 
-                    })
+                onLogin={(email, password) =>
+                    handleLogin({ email, password })
                 }
                 loading={loading}
                 error={error}
