@@ -1,9 +1,8 @@
 /**
  * Hook personalizado para manejo de autenticación
- * Encapsula login, logout, registro y manejo de tokens
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'expo-router';
 import * as authApi from '../api/auth.api';
 import { saveAccessToken, saveRefreshToken, getAccessToken, clearTokens } from '../utils/storage';
@@ -34,19 +33,18 @@ export function useAuth(): UseAuthReturn {
     isAuthenticated: false,
   });
 
-  /**
-   * Verifica si hay una sesión activa al cargar el hook
-   */
   const checkAuth = useCallback(async () => {
     try {
       const token = await getAccessToken();
       if (!token) {
-        setState((prev) => ({ ...prev, isAuthenticated: false }));
+        setState(prev => ({ ...prev, isAuthenticated: false }));
         return;
       }
 
-      setState((prev) => ({ ...prev, loading: true }));
+      setState(prev => ({ ...prev, loading: true }));
+      
       const user = await authApi.getCurrentUser();
+      
       setState({
         user,
         loading: false,
@@ -63,16 +61,12 @@ export function useAuth(): UseAuthReturn {
     }
   }, []);
 
-  /**
-   * Inicia sesión con email y password
-   */
   const login = useCallback(async (email: string, password: string): Promise<boolean> => {
-    setState((prev) => ({ ...prev, loading: true, error: null }));
+    setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
       const response = await authApi.login({ email, password });
 
-      // Guardar tokens de forma segura
       await saveAccessToken(response.token);
       await saveRefreshToken(response.refreshToken);
 
@@ -86,7 +80,7 @@ export function useAuth(): UseAuthReturn {
       return true;
     } catch (error) {
       const apiError = handleApiError(error);
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         loading: false,
         error: apiError,
@@ -96,20 +90,15 @@ export function useAuth(): UseAuthReturn {
     }
   }, []);
 
-  /**
-   * Registra un nuevo usuario
-   */
   const register = useCallback(async (email: string, password: string): Promise<boolean> => {
-    setState((prev) => ({ ...prev, loading: true, error: null }));
+    setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
       await authApi.register({ email, password });
-
-      // Después del registro, iniciar sesión automáticamente
       return await login(email, password);
     } catch (error) {
       const apiError = handleApiError(error);
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         loading: false,
         error: apiError,
@@ -118,9 +107,6 @@ export function useAuth(): UseAuthReturn {
     }
   }, [login]);
 
-  /**
-   * Cierra sesión y limpia tokens
-   */
   const logout = useCallback(async () => {
     try {
       await authApi.logout();
@@ -138,14 +124,10 @@ export function useAuth(): UseAuthReturn {
     }
   }, [router]);
 
-  /**
-   * Limpia el error del estado
-   */
   const clearError = useCallback(() => {
-    setState((prev) => ({ ...prev, error: null }));
+    setState(prev => ({ ...prev, error: null }));
   }, []);
 
-  // Verificar autenticación al montar el componente
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);

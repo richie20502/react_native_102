@@ -2,8 +2,6 @@ import { LoginFormProps } from "@/interfaces/auth.interface";
 import { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 
-
-
 export default function LoginForm({
     onLogin,
     loading,
@@ -18,10 +16,7 @@ export default function LoginForm({
 
     return (
         <View style={styles.container}>
-
-            <Text style={styles.title}>
-                Iniciar sesión
-            </Text>
+            <Text style={styles.title}>Iniciar sesión</Text>
 
             <TextInput
                 style={styles.input}
@@ -40,25 +35,17 @@ export default function LoginForm({
             />
 
             {error !== "" && (
-                <Text style={styles.error}>
-                    {error}
-                </Text>
+                <Text style={styles.error}>{error}</Text>
             )}
 
             <Button
-                title={
-                    loading
-                        ? "Validando..."
-                        : "Iniciar sesión"
-                }
+                title={loading ? "Validando..." : "Iniciar sesión"}
                 onPress={handleLogin}
                 disabled={loading}
             />
-
         </View>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
