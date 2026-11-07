@@ -83,7 +83,7 @@ export default function ErrorMessage({ error, onRetry }: ErrorMessageProps) {
    */
   const message = typeof error === 'string' 
     ? error 
-    : error?.message || 'Error desconocido';
+    : (error && error.message) ? error.message : 'Error desconocido';
 
   /**
    * ERROR #5: Stale Closure en Callbacks
@@ -278,7 +278,7 @@ export default function ErrorMessage({ error, onRetry }: ErrorMessageProps) {
           { 
             text: 'Sí', 
             // Usar ref.current para obtener la última versión
-            onPress: () => onRetryRef.current?.() 
+            onPress: () => onRetryRef.current && onRetryRef.current() 
           }
         ]
       );

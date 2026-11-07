@@ -56,7 +56,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const response = await authApi.login({ email, password });
 
-      await saveAccessToken(response.token);
+      await saveAccessToken(response.accessToken);
       await saveRefreshToken(response.refreshToken);
 
       setUser(response.user);

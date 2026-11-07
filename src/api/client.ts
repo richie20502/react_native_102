@@ -57,14 +57,14 @@ apiClient.interceptors.response.use(
           refreshToken,
         });
 
-        const { token, refreshToken: newRefreshToken } = response.data;
+        const { accessToken, refreshToken: newRefreshToken } = response.data;
 
         // Guardar nuevos tokens
-        await saveAccessToken(token);
+        await saveAccessToken(accessToken);
         await saveRefreshToken(newRefreshToken);
 
         // Reintentar la petición original con el nuevo token
-        originalRequest.headers.Authorization = `Bearer ${token}`;
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return apiClient(originalRequest);
       } catch (refreshError) {
         // Error al refrescar, limpiar tokens y rechazar

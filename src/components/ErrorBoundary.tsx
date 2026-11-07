@@ -55,7 +55,7 @@ export default class ErrorBoundary extends Component<Props, State> {
         <View style={styles.container}>
           <Text style={styles.title}>Algo salió mal</Text>
           <Text style={styles.message}>
-            {this.state.error?.message || 'Error desconocido'}
+            {this.state.error && this.state.error.message ? this.state.error.message : 'Error desconocido'}
           </Text>
           <TouchableOpacity style={styles.button} onPress={this.handleReset}>
             <Text style={styles.buttonText}>Intentar de nuevo</Text>

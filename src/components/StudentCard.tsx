@@ -73,7 +73,7 @@ const StudentCard = React.memo(({ student, onPress }: StudentCardProps) => {
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => onPress?.(student)}
+      onPress={() => onPress && onPress(student)}
       activeOpacity={0.7}
       /**
        * ERROR #2: Accesibilidad en Componentes Interactivos
@@ -208,7 +208,7 @@ const StudentCard = React.memo(({ student, onPress }: StudentCardProps) => {
              * 2. Verificar que el avatar muestra '?' en lugar de crash
              * 3. Verificar que no hay errores en consola
              */}
-            {student.nombre?.charAt(0) || '?'}{student.apellido?.charAt(0) || '?'}
+            {(student.nombre ? student.nombre.charAt(0) : '?')}{(student.apellido ? student.apellido.charAt(0) : '?')}
           </Text>
         </View>
         <View style={styles.info}>

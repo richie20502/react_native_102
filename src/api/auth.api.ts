@@ -12,7 +12,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string;
+  accessToken: string;
   refreshToken: string;
   user: User;
 }
@@ -27,7 +27,7 @@ export interface RefreshTokenRequest {
 }
 
 export interface RefreshTokenResponse {
-  token: string;
+  accessToken: string;
   refreshToken: string;
 }
 
@@ -54,7 +54,7 @@ export async function register(data: RegisterRequest): Promise<{ user: User }> {
  */
 export async function getCurrentUser(): Promise<User> {
   const response = await apiClient.get<UserMeResponse>('/api/auth/me');
-  return response.data.user;
+  return response.data.data;
 }
 
 /**

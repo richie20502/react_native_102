@@ -6,12 +6,12 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuthContext } from '../../context/AuthContext';
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { colors, theme, toggleTheme } = useTheme();
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthContext();
 
   const handleLogout = async () => {
     Alert.alert(
@@ -36,12 +36,12 @@ export default function ProfileScreen() {
       <View style={styles.content}>
         <View style={[styles.avatarContainer, { backgroundColor: colors.primary }]}>
           <Text style={styles.avatarText}>
-            {user?.email?.charAt(0).toUpperCase() || 'U'}
+            {user && user.email ? user.email.charAt(0).toUpperCase() : 'U'}
           </Text>
         </View>
 
         <Text style={[styles.email, { color: colors.text }]}>
-          {user?.email || 'usuario@ejemplo.com'}
+          {user && user.email ? user.email : 'usuario@ejemplo.com'}
         </Text>
 
         <View style={[styles.section, { backgroundColor: colors.card }]}>

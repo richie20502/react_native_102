@@ -1,58 +1,43 @@
-import {
-    StyleSheet,
-    View
-} from "react-native";
+/**
+ * Punto de entrada - Verifica autenticación
+ */
 
-import { useRouter } from "expo-router";
-import LoginForm from "../components/LoginForm";
-import { useLogin } from "../hooks/useLogin";
-import { LoginRequest } from "../interfaces/auth.interface";
+import React, { useEffect } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useAuthContext } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
-export default function LoginScreen() {
-    const router = useRouter();
-    const {
-        login,
-        loading,
-        error
-    } = useLogin();
+export default function Index() {
+  const router = useRouter();
+  const { isAuthenticated, loading } = useAuthContext();
+  const { colors } = useTheme();
 
-    const handleLogin = async (
-        data: LoginRequest
-    ) => {
+  useEffect(() => {
+    if (!loading) {
+      if (isAuthenticated) {
+        router.replace('/(tabs)');
+      } else {
+        router.replace('/login');
+      }
+    }
+  }, [isAuthenticated, loading]);
 
-        const success = await login(
-            data
-        );
-
-        if (success) {
-            router.replace("/home");
-        }
-    };
-
+  if (loading) {
     return (
-        <View style={styles.container}>
-            <LoginForm
-                 onLogin={(
-                    email,
-                    password
-                ) =>
-                    handleLogin({
-                        email,
-                        password 
-                    })
-                }
-                loading={loading}
-                error={error}
-            />
-        </View>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
     );
+  }
+
+  return null;
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-    },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

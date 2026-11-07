@@ -13,7 +13,7 @@ export default function NotificationList() {
   if (notifications.length === 0) return null;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} pointerEvents="box-none">
       {notifications.map(notification => (
         <Notification
           key={notification.id}

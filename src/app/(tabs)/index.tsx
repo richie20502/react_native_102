@@ -6,12 +6,12 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuthContext } from '../../context/AuthContext';
 
 export default function HomeScreen() {
   const router = useRouter();
   const { colors } = useTheme();
-  const { user } = useAuth();
+  const { user } = useAuthContext();
 
   const quickActions = [
     { title: 'Ver Estudiantes', route: '/students', color: '#3B82F6' },
@@ -27,7 +27,7 @@ export default function HomeScreen() {
             Bienvenido
           </Text>
           <Text style={[styles.welcomeSubtitle, { color: colors.secondary }]}>
-            {user?.email || 'Usuario'}
+            {user ? user.email : 'Usuario'}
           </Text>
         </View>
 
